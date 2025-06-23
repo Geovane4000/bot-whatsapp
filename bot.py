@@ -1,6 +1,7 @@
 from flask import Flask, request
 import pandas as pd
 import json
+import requests
 
 app = Flask(__name__)
 
@@ -44,13 +45,12 @@ def receber_mensagem():
 
 
 def enviar_mensagem(telefone, texto):
-    url = 'https://api.z-api.io/SEU_TOKEN_AQUI/send-message'
+    url = 'https://api.z-api.io/BD8F59C666DC3053A0AEFFFB/send-message'
     payload = {
         "phone": telefone,
         "message": texto
     }
     headers = {'Content-Type': 'application/json'}
-    import requests
     requests.post(url, data=json.dumps(payload), headers=headers)
 
 
@@ -66,3 +66,4 @@ def salvar_dados(dados):
 
 if __name__ == '__main__':
     app.run(port=5000)
+
