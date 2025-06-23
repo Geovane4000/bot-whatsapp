@@ -2,6 +2,7 @@ from flask import Flask, request
 import pandas as pd
 import json
 import requests
+import os
 
 app = Flask(__name__)
 
@@ -36,12 +37,11 @@ def receber_mensagem():
 
     elif etapa == 3:
         clientes[numero]['endereco'] = mensagem
-        salvar_dados(clientes[numero])
+        # salvar_dados(clientes[numero])  # Comentado para evitar erros no Railway
         enviar_mensagem(numero, '✅ Obrigado! Seus dados foram enviados. Em breve nossa equipe entrará em contato 😊')
         del clientes[numero]  # Limpa da memória
 
     return 'OK'
-
 
 def enviar_mensagem(telefone, texto):
     url = 'https://api.z-api.io/instances/3E32A7C5E4BCD0A341925674B530B88A/token/BD8F59C666DC3053A0AEFFFB/send-text'
@@ -52,50 +52,16 @@ def enviar_mensagem(telefone, texto):
     headers = {'Content-Type': 'application/json'}
     requests.post(url, data=json.dumps(payload), headers=headers)
 
-
-def salvar_dados(dados):
-    df = pd.DataFrame([dados])
-    try:
-        df_antigo = pd.read_csv('clientes.csv')
-        df = pd.concat([df_antigo, df], ignore_index=True)
-    except FileNotFoundError:
-        pass
-    df.to_csv('clientes.csv', index=False)
-
+# def salvar_dados(dados):
+#     df = pd.DataFrame([dados])
+#     try:
+#         df_antigo = pd.read_csv('clientes.csv')
+#         df = pd.concat([df_antigo, df], ignore_index=True)
+#     except FileNotFoundError:
+#         pass
+#     df.to_csv('clientes.csv', index=False)
 
 if __name__ == '__main__':
-    app.run(port=5000)
-
-
-    elif etapa == 3:
-        clientes[numero]['endereco'] = mensagem
-        salvar_dados(clientes[numero])
-        enviar_mensagem(numero, '✅ Obrigado! Seus dados foram enviados. Em breve nossa equipe entrará em contato 😊')
-        del clientes[numero]  # Limpa da memória
-
-    return 'OK'
-
-
-def enviar_mensagem(telefone, texto):
-    url = 'https://api.z-api.io/BD8F59C666DC3053A0AEFFFB/send-message'
-    payload = {
-        "phone": telefone,
-        "message": texto
-    }
-    headers = {'Content-Type': 'application/json'}
-    requests.post(url, data=json.dumps(payload), headers=headers)
-
-
-def salvar_dados(dados):
-    df = pd.DataFrame([dados])
-    try:
-        df_antigo = pd.read_csv('clientes.csv')
-        df = pd.concat([df_antigo, df], ignore_index=True)
-    except FileNotFoundError:
-        pass
-    df.to_csv('clientes.csv', index=False)
-
-
-if __name__ == '__main__':
-    app.run(port=5000)
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port)
 
