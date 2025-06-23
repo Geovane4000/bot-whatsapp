@@ -18,6 +18,9 @@ def receber_mensagem():
         return 'OK'
 
     numero = data['message']['from']
+    # Limpa o número para remover sufixos, deixando só os números
+    numero = numero.split('@')[0]
+
     mensagem = data['message']['body'].strip()
 
     if numero not in clientes:
