@@ -12,6 +12,8 @@ clientes = {}
 @app.route('/webhook', methods=['POST'])
 def receber_mensagem():
     data = request.json
+    print('Recebido webhook:', data)  # DEBUG para verificar as mensagens recebidas
+
     if not data or 'message' not in data:
         return 'OK'
 
